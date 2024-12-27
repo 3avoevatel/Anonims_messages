@@ -65,7 +65,7 @@ async def anon_mess(message: Message):
 @my_router.message(lambda msg: msg.text == 'адм')
 async def admin_panel(message: Message):
     user_id = message.from_user.id
-    if user_id == 1992043529:
+    if user_id == ADMIN_ID:
         await message.reply('👮‍♂️ Добро пожаловать в панель администратора', reply_markup=kb.admin_panel)
     else:
         return
