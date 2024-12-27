@@ -5,13 +5,12 @@ from aiogram.types import Message, CallbackQuery
 import app.keyboards as kb
 import sqlite3
 
-# Переменные для хранения текста и фото рассылки
+
 broadcast_text = ""
 broadcast_photo = ""
 
-# Инициализируем базу данных
 def db_init():
-    conn = sqlite3.connect('users.db')  # Подключаемся к базе данных
+    conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
@@ -21,11 +20,10 @@ def db_init():
     conn.commit()
     conn.close()
 
-db_init()  # Инициализируем базу данных
+db_init()
 
 my_router = Router()
 
-# Глобальный словарь для хранения состояния пользователей
 user_states = {}
 
 def add_user_to_db(user_id):
@@ -48,13 +46,12 @@ async def cmd_start(message: Message):
     referral_id = str(message.from_user.id)
     args = message.text.split()[1:]
 
-    # Записываем пользователя в БД, если он еще не зарегистрирован
     add_user_to_db(message.from_user.id)
 
     if args:
         referral_id_arg = args[0]
         await message.answer(f'💬 Напишите ваше сообщение (ID: {referral_id_arg}):')
-        user_states[message.from_user.id] = referral_id_arg  # Сохраняем состояние
+        user_states[message.from_user.id] = referral_id_arg
     else:
         await message.reply(f'💌 Добро пожаловать, вот твоя ссылка:\n🔗 https://t.me/uwu_code_test_bot?start={referral_id}\n'
                             f' \n💬 Каждый, кто перейдет по ней, сможет оставить тебе сообщение!',
@@ -110,41 +107,41 @@ async def set_broadcast_text(callback_query: CallbackQuery):
 async def set_broadcast_photo(callback_query: CallbackQuery):
     await callback_query.answer("Отправьте фото для рассылки:")
 
-@my_router.message(lambda message: message.text)  # Обработка текстовых сообщений
+@my_router.message(lambda message: message.text)
 async def receive_broadcast_text(message: types.Message):
     global broadcast_text
     broadcast_text = message.text
     await message.reply("✅ Текст рассылки установлен!")
 
-@my_router.message(lambda message: message.photo)  # Обработка фото
+@my_router.message(lambda message: message.photo)
 async def receive_broadcast_photo(message: types.Message):
     global broadcast_photo
-    broadcast_photo = message.photo[-1].file_id  # Берем наибольшее качество фото
+    broadcast_photo = message.photo[-1].file_id
     await message.reply("✅ Фото рассылки установлено!")
 
 
-@my_router.message(lambda message: message.text)  # Обработка текстовых сообщений
+@my_router.message(lambda message: message.text)
 async def receive_broadcast_text(message: types.Message):
     global broadcast_text
     broadcast_text = message.text
     await message.reply("✅ Текст рассылки установлен!")
 
-@my_router.message(lambda message: message.photo)  # Обработка фото
+@my_router.message(lambda message: message.photo)
 async def receive_broadcast_photo(message: types.Message):
     global broadcast_photo
-    broadcast_photo = message.photo[-1].file_id  # Берем наибольшее качество фото
+    broadcast_photo = message.photo[-1].file_id
     await message.reply("✅ Фото рассылки установлено!")
 
 
 @my_router.message()
 async def handle_message_to_user(message: Message):
-    referral_user_id = user_states.get(message.from_user.id)  # Получаем состояние
+    referral_user_id = user_states.get(message.from_user.id)
     if referral_user_id:
         await message.reply('✅ Ваше сообщение было отправлено')
 
         await message.bot.send_message(referral_user_id, f'💬 Тебе пришло новое сообщение: \n_\n{message.text}_',
                                        parse_mode='MarkdownV2')
-        del user_states[message.from_user.id]  # Удаляем состояние после отправки
+        del user_states[message.from_user.id]
     else:
         await message.reply('❌ Возникла ошибка: Для отправки сообщения, надо сначала перейти по чей-то ссылке')
 
