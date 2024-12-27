@@ -4,7 +4,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 import app.keyboards as kb
 import sqlite3
-
+from config.py import ADMIN_ID
 
 broadcast_text = ""
 broadcast_photo = ""
