@@ -53,14 +53,14 @@ async def cmd_start(message: Message):
         await message.answer(f'💬 Напишите ваше сообщение (ID: {referral_id_arg}):')
         user_states[message.from_user.id] = referral_id_arg
     else:
-        await message.reply(f'💌 Добро пожаловать, вот твоя ссылка:\n🔗 https://t.me/uwu_code_test_bot?start={referral_id}\n'
+        await message.reply(f'💌 Добро пожаловать, вот твоя ссылка:\n🔗 https://t.me/{BOT_USERNAME}?start={referral_id}\n'
                             f' \n💬 Каждый, кто перейдет по ней, сможет оставить тебе сообщение!',
                             reply_markup=kb.main)
 
 @my_router.message(lambda msg: msg.text == '🔗Ссылка')
 async def anon_mess(message: Message):
     await message.reply('💌 Чтобы получать анонимные сообщения, просто размести эту ссылку у себя в соц. сетях:\n'
-                        f'🔗 https://t.me/uwu_code_test_bot?start={message.from_user.id}')
+                        f'🔗 https://t.me/{BOT_USERNAME}?start={message.from_user.id}')
 
 @my_router.message(lambda msg: msg.text == 'адм')
 async def admin_panel(message: Message):
